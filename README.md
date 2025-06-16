@@ -5,7 +5,7 @@ Store your api secret in a file named `ddns-password.txt`.
 And then set the required env variables:
 
 ```env
-HOST=<YOUR HOST>
+HOSTS=<YOUR HOST AS COMMA SEPERATED VALUES>
 DOMAIN=<YOUR DOMAIN>
 PASSWORD_FILE=<PATH TO ddns-password.txt>
 ```

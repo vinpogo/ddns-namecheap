@@ -1,12 +1,14 @@
-const host = Deno.env.get("HOST");
+const hosts = Deno.env.get("HOSTS");
 const domain = Deno.env.get("DOMAIN");
 const passwordFile = Deno.env.get("PASSWORD_FILE")!;
 
 const password = await Deno.readTextFile(passwordFile);
 
-if (!(host && domain && password)) {
+if (!(hosts && domain && password)) {
   console.error(
-    `Something is missing... see ${JSON.stringify({ host, domain, password })}`,
+    `Something is missing... see ${
+      JSON.stringify({ host: hosts, domain, password })
+    }`,
   );
   Deno.exit(1);
 }
@@ -15,7 +17,7 @@ console.log("Server started successfully");
 async function updateDnsRecord(
   args: { host: string; domain: string; password: string; ip: string },
 ) {
-  console.log("Updating DNS record...");
+  console.log(`Updating DNS record for ${args.host} ...`);
   // https://dynamicdns.park-your-domain.com/update?host=[host]&domain=[domain_name]&password=[ddns_password]&ip=[your_ip]
   const url = new URL("https://dynamicdns.park-your-domain.com/update");
   Object.entries(args).forEach(([key, value]) =>
@@ -33,15 +35,17 @@ async function getPublicIp() {
   if (res.ok) {
     const { ip } = await res.json() as { ip: string };
     console.log(`Received public ip address: ${ip}`);
-    return ip;
+    return `${ip}:`;
   }
   console.error("Something went wrong while getting public ip");
 }
 
 Deno.cron("update dns record", { minute: { every: 1 } }, async () => {
   const ip = await getPublicIp();
-  if (!(host && domain && password && ip)) {
+  if (!(hosts && domain && password && ip)) {
     Deno.exit(1);
   }
-  await updateDnsRecord({ host, domain, password, ip });
+  for (const host of hosts.split(",")) {
+    await updateDnsRecord({ host, domain, password, ip });
+  }
 });
