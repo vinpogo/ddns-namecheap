@@ -8,6 +8,7 @@ And then set the required env variables:
 HOSTS=<YOUR HOST AS COMMA SEPERATED VALUES>
 DOMAIN=<YOUR DOMAIN>
 PASSWORD_FILE=<PATH TO ddns-password.txt>
+CRON=<CRON SCHEDULE> # defaults to 0 * * * *
 ```
 
 

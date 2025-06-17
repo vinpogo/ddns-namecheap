@@ -1,6 +1,7 @@
 const hosts = Deno.env.get("HOSTS");
 const domain = Deno.env.get("DOMAIN");
 const passwordFile = Deno.env.get("PASSWORD_FILE")!;
+const cron = Deno.env.get("CRON") ?? "0 * * * *";
 
 const password = await Deno.readTextFile(passwordFile);
 
@@ -40,7 +41,7 @@ async function getPublicIp() {
   console.error("Something went wrong while getting public ip");
 }
 
-Deno.cron("update dns record", { minute: { every: 1 } }, async () => {
+Deno.cron("update dns record", cron, async () => {
   const ip = await getPublicIp();
   if (!(hosts && domain && password && ip)) {
     Deno.exit(1);
