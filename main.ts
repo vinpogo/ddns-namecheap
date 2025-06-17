@@ -41,7 +41,7 @@ async function getPublicIp() {
   console.error("Something went wrong while getting public ip");
 }
 
-Deno.cron("update dns record", cron, async () => {
+async function doUpdate() {
   const ip = await getPublicIp();
   if (!(hosts && domain && password && ip)) {
     Deno.exit(1);
@@ -49,4 +49,8 @@ Deno.cron("update dns record", cron, async () => {
   for (const host of hosts.split(",")) {
     await updateDnsRecord({ host, domain, password, ip });
   }
-});
+}
+
+Deno.cron("update dns record", cron, doUpdate);
+
+doUpdate();
