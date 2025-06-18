@@ -36,7 +36,7 @@ async function getPublicIp() {
   if (res.ok) {
     const { ip } = await res.json() as { ip: string };
     console.log(`Received public ip address: ${ip}`);
-    return `${ip}:`;
+    return ip;
   }
   console.error("Failed to fetch public IP address");
   Deno.exit(EXIT_CODES.IP_FETCH_FAILED);
