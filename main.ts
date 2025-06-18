@@ -7,11 +7,11 @@ const password = await Deno.readTextFile(passwordFile);
 
 if (!(hosts && domain && password)) {
   console.error(
-    `Something is missing... see ${
-      JSON.stringify({ host: hosts, domain, password })
+    `Missing required configuration. Check environment variables: ${
+      JSON.stringify({ hosts, domain, passwordProvided: !!password })
     }`,
   );
-  Deno.exit(1);
+  Deno.exit(EXIT_CODES.MISSING_CONFIG);
 }
 console.log("Server started successfully");
 
@@ -38,13 +38,15 @@ async function getPublicIp() {
     console.log(`Received public ip address: ${ip}`);
     return `${ip}:`;
   }
-  console.error("Something went wrong while getting public ip");
+  console.error("Failed to fetch public IP address");
+  Deno.exit(EXIT_CODES.IP_FETCH_FAILED);
 }
 
 async function doUpdate() {
   const ip = await getPublicIp();
   if (!(hosts && domain && password && ip)) {
-    Deno.exit(1);
+    console.error("Failed to update DNS: missing required data");
+    Deno.exit(EXIT_CODES.DNS_UPDATE_FAILED);
   }
   for (const host of hosts.split(",")) {
     await updateDnsRecord({ host, domain, password, ip });
