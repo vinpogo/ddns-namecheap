@@ -4,7 +4,7 @@ services:
     container_name: namecheap-ddns
     restart: unless-stopped
     environment:
-        - HOST=<YOUR HOST>
+        - HOSTS=<YOUR HOSTS>
         - DOMAIN=<YOUR DOMAIN>
         - PASSWORD_FILE=/run/secrets/ddns-password
     secrets:
