@@ -6,10 +6,4 @@ services:
     environment:
         - HOST=<YOUR HOST>
         - DOMAIN=<YOUR DOMAIN>
-        - PASSWORD_FILE=/run/secrets/ddns-password
-    secrets:
-        - ddns-password
-
-secrets:
-  ddns-password:
-    file: <PATH TO YOUR SECRET>
+        - PASSWORD=<YOUR API SECRET>

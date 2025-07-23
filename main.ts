@@ -1,9 +1,7 @@
 const hosts = Deno.env.get("HOSTS");
 const domain = Deno.env.get("DOMAIN");
-const passwordFile = Deno.env.get("PASSWORD_FILE")!;
+const password = Deno.env.get("PASSWORD");
 const cron = Deno.env.get("CRON") ?? "0 * * * *";
-
-const password = await Deno.readTextFile(passwordFile);
 
 if (!(hosts && domain && password)) {
   console.error(
